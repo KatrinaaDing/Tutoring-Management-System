@@ -1,0 +1,8 @@
+app:
+  datasource:
+    jdbc-url: jdbc:postgresql://unsw-study1.c2tuw1lbakyb.ap-southeast-1.rds.amazonaws.com:5432/unsw_study
+    username: postgres
+    password: xiaoding
+    pool-size: 30
+server:
+  port: 8888
