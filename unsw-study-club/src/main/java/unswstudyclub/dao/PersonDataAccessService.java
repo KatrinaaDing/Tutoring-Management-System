@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository("postgres")
-public class PersonDataAccessService  implements PersonDao {
+public class PersonDataAccessService implements PersonDao {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -32,7 +32,7 @@ public class PersonDataAccessService  implements PersonDao {
                                 person.getNickName(),
                                 person.getProfileImage(),
                                 person.getGender()
-                );
+        );
     }
 
     @Override
@@ -51,13 +51,13 @@ public class PersonDataAccessService  implements PersonDao {
             String gender = resultSet.getString("gender");
             int exp = resultSet.getInt("exp");
             Timestamp joinDate = resultSet.getTimestamp("join_date");
-            return new Person(id, firstName, lastName, email, password, nickName, profileImage, gender.charAt(0) , exp, joinDate);
+            return new Person(id, firstName, lastName, email, password, nickName, profileImage, gender.charAt(0) , joinDate);
         });
     }
 
     @Override
     public Optional<Person> selectPersonById(UUID id) {
-        final String sql = "SELECT * FROM person WHERE id = ?";
+        final String sql = "SELECT * FROM Person WHERE id = ?";
         Person person = jdbcTemplate.queryForObject(
                 sql,
                 new Object[]{id},
@@ -72,7 +72,7 @@ public class PersonDataAccessService  implements PersonDao {
                     String gender = resultSet.getString("gender");
                     int exp = resultSet.getInt("exp");
                     Timestamp joinDate = resultSet.getTimestamp("join_date");
-                    return new Person(id, firstName, lastName, email, password, nickName, profileImage, gender.charAt(0) , exp, joinDate);
+                    return new Person(id, firstName, lastName, email, password, nickName, profileImage, gender.charAt(0), joinDate);
                 });
 
         // return null if the person not found
@@ -81,11 +81,33 @@ public class PersonDataAccessService  implements PersonDao {
 
     @Override
     public int deletePersonById(UUID id) {
-        return 0;
+        final String sql = "DELETE FROM Person WHERE id = ?";
+        return jdbcTemplate.update(sql, id);
     }
 
     @Override
     public int updatePersonById(UUID id, Person person) {
-        return 0;
+        return jdbcTemplate.update(
+                "UPDATE Person SET " +
+                        "first_name = ?," +
+                        "last_name = ?," +
+                        "email = ?," +
+                        "password = ?," +
+                        "nick_name = ?," +
+                        "profile_image = ?," +
+                        "gender = ?," +
+                        "exp = ?" +
+                        "WHERE id = ?",
+                person.getFirstName(),
+                person.getLastName(),
+                person.getEmail(),
+                person.getPassword(),
+                person.getNickName(),
+                person.getProfileImage(),
+                person.getGender(),
+                person.getExp(),
+                id
+        );
+
     }
 }

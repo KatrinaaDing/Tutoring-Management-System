@@ -25,7 +25,6 @@ public class Person {
                   @JsonProperty("nickName") String nickName,
                   @JsonProperty("profileImage") String profileImage,
                   @JsonProperty("gender") char gender,
-                  @JsonProperty("exp") int exp,
                   @JsonProperty("joinDate") Timestamp joinDate) {
         this.id = id;
         this.firstName = firstName;
