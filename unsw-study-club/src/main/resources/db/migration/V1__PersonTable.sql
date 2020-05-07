@@ -1,7 +1,6 @@
-
 -- create uuid generator
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+CREATE EXTENSION "uuid-ossp";
+CREATE EXTENSION "pgcrypto";
 
 CREATE TABLE Person  (
 	id 				UUID NOT NULL,
@@ -19,7 +18,7 @@ CREATE TABLE Person  (
 );
 
 CREATE TABLE Course (
-	id				integer,
+	id				UUID,
 	code			char(8) NOT NULL CHECK (code ~ '[A-Z]{4}\d{4}') UNIQUE,
 	name 			varchar(80) NOT NULL CHECK (name ~ '^\w+(\s\w+)*$'),
 	handbook        varchar(200) UNIQUE,
@@ -29,7 +28,7 @@ CREATE TABLE Course (
 
 CREATE TABLE Student (
 	id 				UUID,
-	study			integer,
+	study			UUID,
 	start_date		timestamp DEFAULT CURRENT_TIMESTAMP,
 
 	foreign key (id) references Person(id),
@@ -38,10 +37,10 @@ CREATE TABLE Student (
 
 CREATE TABLE Tutor (
 	id 				UUID,
-	teach 			integer,
+	teach 			UUID,
 	likes			integer CHECK (likes >= 0),
 	start_date      timestamp DEFAULT CURRENT_TIMESTAMP,
-    
+
     UNIQUE (id, teach),
 	foreign key (id) references Person(id),
 	foreign key (teach) references Course(id)
@@ -59,11 +58,11 @@ CREATE TABLE Admin (
 
 
 CREATE TABLE Video (
-	id 				integer,
+	id 				UUID,
 	link			varchar(100) NOT NULL,
 	title			varchar(20) NOT NULL,
 	description		varchar(100),
-	course 			integer,
+	course 			UUID,
 	uploader  		UUID,
 	upload_date 	timestamp DEFAULT CURRENT_TIMESTAMP,
 
@@ -75,8 +74,8 @@ CREATE TABLE Video (
 
 CREATE TABLE VideoRank (
 	person		UUID,
-	video 		integer,
-	rank 		integer NOT NULL CHECK (rank > 0 and rank <= 5), 
+	video 		UUID,
+	rank 		integer NOT NULL CHECK (rank > 0 and rank <= 5),
 	comment		varchar(100),
 
 	UNIQUE (person, video),
@@ -85,10 +84,10 @@ CREATE TABLE VideoRank (
 );
 
 CREATE TABLE Attachment (
-	id			integer,
+	id			UUID,
 	title		varchar(20) NOT NULL,
 	content		varchar(1000) NOT NULL,
-	course      integer,
+	course      UUID,
 	uploader	UUID,
 	upload_date timestamp DEFAULT CURRENT_TIMESTAMP,
 
