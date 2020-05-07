@@ -1,6 +1,6 @@
 -- create uuid generator
-CREATE EXTENSION "uuid-ossp";
-CREATE EXTENSION "pgcrypto";
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 CREATE TABLE Person  (
 	id 				UUID NOT NULL,
@@ -150,3 +150,42 @@ before insert on Attachment
 for each row
 execute procedure checkTutor();
 
+-- views
+
+DROP VIEW IF EXISTS Teach;
+CREATE VIEW Teach AS
+SELECT p.first_name, p.last_name, p.email, c.code AS course, t.start_date
+FROM Person p
+JOIN Tutor t ON p.id = t.id
+JOIN Course c ON c.id = t.teach
+ORDER BY p.first_name, p.last_name
+;
+
+DROP VIEW IF EXISTS Study;
+CREATE VIEW Study AS
+SELECT p.first_name, p.last_name, p.email, c.code AS course, s.start_date
+FROM Person p
+JOIN Student s ON p.id = s.id
+JOIN Course c ON c.id = s.study
+ORDER BY p.first_name, p.last_name
+;
+
+DROP VIEW IF EXISTS Video_To_Course;
+CREATE VIEW Video_To_Course AS
+SELECT v.title, c.code AS course, p.first_name||' '||p.last_name AS uploader, v.upload_date, avg(vr.rank)::numeric(5,2) AS avg_rank
+from Course c
+JOIN Video v on v.course = c.id
+JOIN VideoRank vr on vr.video = v.id
+Join Person p on v.uploader = p.id
+GROUP BY v.id, c.code, p.first_name||' '||p.last_name
+ORDER BY c.code
+;
+
+DROP VIEW IF EXISTS Course_And_Attachment;
+CREATE VIEW Course_And_Attachment AS
+SELECT c.code AS course, a.title, p.first_name||' '||p.last_name AS uploader, a.upload_date
+FROM Course c
+JOIN Attachment a on a.course = c.id
+JOIN Person p on a.uploader = p.id
+ORDER BY c.code
+;
