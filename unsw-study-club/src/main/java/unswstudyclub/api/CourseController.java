@@ -12,7 +12,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
-@RequestMapping("api/v1/course")
+@RequestMapping("api/v1")
 @RestController
 public class CourseController {
 
@@ -23,34 +23,34 @@ public class CourseController {
         this.courseService = courseService;
     }
 
-    @PostMapping
+    @PostMapping(path="/course")
     public int addCourse(@Valid @NonNull @RequestBody Course course) {
         return courseService.addCourse(course);
     }
 
-    @GetMapping
+    @GetMapping(path="/course")
     public List<Course> selectAllCourse() {
         return courseService.selectAllCourse();
     }
 
-    @GetMapping(path="/id/{id}")
+    @GetMapping(path="/course/id/{id}")
     public Course selectCourseById(@PathVariable("id") UUID id) {
         return courseService.selectCourseById(id)
                 .orElse(null);
     }
 
-    @GetMapping(path="/code/{code}")
+    @GetMapping(path="/course/code/{code}")
     public Course selectCourseByCode(@PathVariable("code") String code){
         return courseService.selectCourseByCode(code)
                 .orElse(null);
     }
 
-    @DeleteMapping(path="/{code}")
+    @DeleteMapping(path="/course/{code}")
     public int deleteCourseByCode(@PathVariable("code") String code) {
         return courseService.deleteCourseByCode(code);
     }
 
-    @PutMapping(path="/{code}")
+    @PutMapping(path="/course/{code}")
     public int updateCourseByCode(@PathVariable("code") String code, @Valid @NonNull @RequestBody Course newCourse) {
         return courseService.updateCourseById(code, newCourse);
     }

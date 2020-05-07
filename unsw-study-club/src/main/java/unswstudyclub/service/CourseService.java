@@ -1,8 +1,9 @@
 package unswstudyclub.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import unswstudyclub.dao.CourseDao;
+import unswstudyclub.dao.UnswStudyClubDao;
 import unswstudyclub.model.Course;
 
 import java.util.List;
@@ -12,32 +13,32 @@ import java.util.UUID;
 @Service
 public class CourseService {
 
-    private final CourseDao courseDao;
+    private final UnswStudyClubDao unswStudyClubDao;
 
     @Autowired
-    public CourseService(CourseDao courseDao) {
-        this.courseDao = courseDao;
+    public CourseService(@Qualifier("postgres") UnswStudyClubDao UnswStudyClubDao) {
+        this.unswStudyClubDao = UnswStudyClubDao;
     }
 
 
     public int addCourse(Course course) {
-        return courseDao.insertCourse(course);
+        return unswStudyClubDao.insertCourse(course);
     }
 
     public List<Course> selectAllCourse() {
-        return courseDao.selectAllCourse();
+        return unswStudyClubDao.selectAllCourse();
     }
 
     public Optional<Course> selectCourseByCode(String code) {
-        return courseDao.selectCourseByCode(code);
+        return unswStudyClubDao.selectCourseByCode(code);
     }
 
     public Optional<Course> selectCourseById(UUID id) {
-        return courseDao.selectCourseById(id);
+        return unswStudyClubDao.selectCourseById(id);
     }
 
     public int deleteCourseByCode(String code) {
-        return courseDao.deleteCourseByCode(code);
+        return unswStudyClubDao.deleteCourseByCode(code);
     }
 
     public int updateCourseById(String code, Course newCourse) {

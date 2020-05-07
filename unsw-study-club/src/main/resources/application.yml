@@ -5,4 +5,4 @@ app:
     password: xiaoding
     pool-size: 30
 server:
-  port: 8888
+  port: 8080
