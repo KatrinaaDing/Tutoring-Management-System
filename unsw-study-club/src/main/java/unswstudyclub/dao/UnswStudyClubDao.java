@@ -5,6 +5,7 @@ package unswstudyclub.dao;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import unswstudyclub.model.Course;
 import unswstudyclub.model.Person;
+import unswstudyclub.model.Study;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,5 +44,10 @@ public interface UnswStudyClubDao {
     int deleteCourseByCode(String code);
     int updateCourseById(String code,Course newCourse);
 
+    // Student
 
+    int addStudent(UUID personId, UUID courseId);
+    int removeStudent(UUID personId, UUID courseId);
+
+    Optional<Study> selectStudentById(UUID id);
 }

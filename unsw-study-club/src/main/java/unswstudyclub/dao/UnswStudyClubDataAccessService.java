@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import unswstudyclub.model.Course;
 import unswstudyclub.model.Person;
+import unswstudyclub.model.Study;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -185,6 +186,55 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
                 newCourse.getCode(),
                 newCourse.getName(),
                 newCourse.getHandbook()
+        );
+    }
+
+    @Override
+    public int addStudent(UUID personId, UUID courseId) {
+        return jdbcTemplate.update(
+                "INSERT INTO Student VALUES (?, ?)",
+                personId,
+                courseId
+        );
+    }
+
+    @Override
+    public Optional<Study> selectStudentById(UUID id) {
+        Study study = null;
+        Person person = selectPersonById(id).orElse(null);
+        if (person != null){
+            study = new Study(person);
+            List<Course> courses = jdbcTemplate.query(
+                                    "SELECT c.id, c.code, c.name, c.handbook, s.start_date " +
+                                            "FROM Student s" +
+                                            "JOIN Course c" +
+                                            "WHERE s.study = c.id",
+                                    (rs, i) -> {
+                                        UUID courseId = UUID.fromString(rs.getString("id"));
+                                        String code = rs.getString("code");
+                                        String name = rs.getString("name");
+                                        String handbook = rs.getString("handbook");
+                                        Timestamp startDate = rs.getTimestamp("start_date");
+                                        return new Course(courseId, code, name, handbook);
+                                    }
+            );
+            study.setCourses(courses);
+        }
+
+        return Optional.ofNullable(study);
+    }
+
+    public List<Study> selectAllStudent(){
+
+        return null;
+    }
+
+    @Override
+    public int removeStudent(UUID personId, UUID courseId) {
+        return jdbcTemplate.update(
+                "DELETE FROM Student WHERE id = ? and study = ?",
+                personId,
+                courseId
         );
     }
 }
