@@ -27,7 +27,7 @@ public class StudentAndTutorService {
     }
 
     public List<Study> selectAllStudent(){
-        return null;
+        return unswStudyClubDao.selectAllStudent();
     }
 
     public int removeStudent(UUID personId, UUID courseId) {

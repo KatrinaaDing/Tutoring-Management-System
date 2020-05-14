@@ -49,5 +49,6 @@ public interface UnswStudyClubDao {
     int addStudent(UUID personId, UUID courseId);
     int removeStudent(UUID personId, UUID courseId);
 
+    public List<Study> selectAllStudent();
     Optional<Study> selectStudentById(UUID id);
 }

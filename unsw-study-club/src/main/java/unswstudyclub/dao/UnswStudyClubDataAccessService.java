@@ -7,6 +7,7 @@ import unswstudyclub.model.Course;
 import unswstudyclub.model.Person;
 import unswstudyclub.model.Study;
 
+import javax.swing.text.html.Option;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
@@ -206,9 +207,9 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
             study = new Study(person);
             List<Course> courses = jdbcTemplate.query(
                                     "SELECT c.id, c.code, c.name, c.handbook, s.start_date " +
-                                            "FROM Student s" +
-                                            "JOIN Course c" +
-                                            "WHERE s.study = c.id",
+                                            "FROM Student s " +
+                                            "JOIN Course c " +
+                                            "ON s.study = c.id",
                                     (rs, i) -> {
                                         UUID courseId = UUID.fromString(rs.getString("id"));
                                         String code = rs.getString("code");
@@ -224,9 +225,14 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
         return Optional.ofNullable(study);
     }
 
+    @Override
     public List<Study> selectAllStudent(){
+        final String sql = "SELECT DISTINCT id FROM Student";
+        return jdbcTemplate.query(sql, (resultSet, i) -> {
 
-        return null;
+            Optional<Study> s =  selectStudentById(UUID.fromString(resultSet.getString("id")));
+            return s.get();
+        });
     }
 
     @Override

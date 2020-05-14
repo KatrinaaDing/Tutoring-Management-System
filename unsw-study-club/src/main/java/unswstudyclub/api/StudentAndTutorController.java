@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import unswstudyclub.model.Study;
 import unswstudyclub.service.StudentAndTutorService;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -22,32 +23,26 @@ public class StudentAndTutorController {
         this.studentAndTutorService = studentAndTutorService;
     }
 
-    @PostMapping(path="/student/add")
-    public int addStudent(@JsonProperty("id") UUID studentId, @JsonProperty("course") UUID courseId) {
+    @PostMapping(path="/student")
+    public int addStudent(@NotNull @RequestParam(name = "id") UUID studentId,
+                          @NotNull @RequestParam(name = "course") UUID courseId) {
         return studentAndTutorService.addStudent(studentId, courseId);
     }
 
-    @GetMapping
-    public List<?> selectAllStudent(){
-        return null;
-
+    @GetMapping(path="/student")
+    public List<Study> selectAllStudent(){
+        return studentAndTutorService.selectAllStudent();
     }
 
     @GetMapping(path="/student/{id}")
     public Optional<Study> selectStudentById(@PathVariable("id") UUID id){
         return studentAndTutorService.selectStudentById(id);
     }
-//    Map<String, String> selectAllStudent() {
-//        HashMap<String, String> map = new HashMap<>();
-//
-//        map.put("key", "value");
-//        map.put("foo", "bar");
-//        map.put("aa", "bb");
-//        return map;
 
 
-    @DeleteMapping(path="/student/delete")
-    public int removeStudent(@JsonProperty("id") UUID studentId, @JsonProperty("course") UUID courseId) {
+    @DeleteMapping(path="/student")
+    public int removeStudent(@NotNull @RequestParam(name = "id") UUID studentId,
+                             @NotNull @RequestParam(name = "course") UUID courseId) {
         return studentAndTutorService.removeStudent(studentId, courseId);
     }
 

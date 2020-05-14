@@ -25,8 +25,6 @@ public class Study {
         return courses;
     }
 
-
-
     public void setPerson(Person person) {
         this.person = person;
     }
