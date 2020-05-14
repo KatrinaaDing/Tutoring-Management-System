@@ -5,6 +5,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import unswstudyclub.model.Course;
 import unswstudyclub.model.Person;
+import unswstudyclub.model.Student;
+import unswstudyclub.model.Tutor;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -186,5 +188,110 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
                 newCourse.getName(),
                 newCourse.getHandbook()
         );
+    }
+
+    @Override
+    public int addStudent(UUID personId, UUID courseId) {
+        return jdbcTemplate.update(
+                "INSERT INTO Student VALUES (?, ?)",
+                personId,
+                courseId
+        );
+    }
+
+    @Override
+    public Optional<Student> selectStudentById(UUID id) {
+        Student student = null;
+        Person person = selectPersonById(id).orElse(null);
+        if (person != null){
+            student = new Student(person);
+            List<Course> courses = jdbcTemplate.query(
+                                    "SELECT c.id, c.code, c.name, c.handbook " +
+                                            "FROM Student s " +
+                                            "JOIN Course c " +
+                                            "ON s.study = c.id " +
+                                            "WHERE s.id = '" + id + "'",
+                                    (rs, i) -> {
+                                        UUID courseId = UUID.fromString(rs.getString("id"));
+                                        String code = rs.getString("code");
+                                        String name = rs.getString("name");
+                                        String handbook = rs.getString("handbook");
+                                        return new Course(courseId, code, name, handbook);
+                                    }
+            );
+            student.setCourses(courses);
+        }
+
+        return Optional.ofNullable(student);
+    }
+
+    @Override
+    public List<Student> selectAllStudent(){
+        final String sql = "SELECT DISTINCT id FROM Student";
+        return jdbcTemplate.query(sql, (resultSet, i) -> {
+            Optional<Student> s = selectStudentById(UUID.fromString(resultSet.getString("id")));
+            return s.get();
+        });
+    }
+
+    @Override
+    public int removeStudent(UUID personId, UUID courseId) {
+        return jdbcTemplate.update(
+                "DELETE FROM Student WHERE id = ? and study = ?",
+                personId,
+                courseId
+        );
+    }
+
+    @Override
+    public int addTutor(UUID personId, UUID courseId) {
+        return jdbcTemplate.update(
+                "INSERT INTO Tutor VALUES (?, ?)",
+                personId,
+                courseId
+        );
+    }
+
+    @Override
+    public int removeTutor(UUID personId, UUID courseId) {
+        return jdbcTemplate.update(
+                "DELETE FROM Tutor WHERE id = ? and study = ?",
+                personId,
+                courseId
+        );
+    }
+
+    @Override
+    public List<Tutor> selectAllTutor() {
+        final String sql = "SELECT DISTINCT id FROM Tutor";
+        return jdbcTemplate.query(sql, (resultSet, i) -> {
+            Optional<Tutor> t = selectTutorById(UUID.fromString(resultSet.getString("id")));
+            return t.get();
+        });
+    }
+
+    @Override
+    public Optional<Tutor> selectTutorById(UUID id) {
+        Tutor tutor = null;
+        Person person = selectPersonById(id).orElse(null);
+        if (person != null){
+            tutor = new Tutor(person);
+            List<Course> courses = jdbcTemplate.query(
+                    "SELECT c.id, c.code, c.name, c.handbook " +
+                            "FROM Tutor t " +
+                            "JOIN Course c " +
+                            "ON t.teach = c.id " +
+                            "WHERE t.id = '" + id + "'",
+                    (rs, i) -> {
+                        UUID courseId = UUID.fromString(rs.getString("id"));
+                        String code = rs.getString("code");
+                        String name = rs.getString("name");
+                        String handbook = rs.getString("handbook");
+                        return new Course(courseId, code, name, handbook);
+                    }
+            );
+            tutor.setCourses(courses);
+        }
+        return Optional.ofNullable(tutor);
     }
 }
