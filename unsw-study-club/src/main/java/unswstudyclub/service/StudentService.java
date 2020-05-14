@@ -5,20 +5,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import unswstudyclub.dao.UnswStudyClubDao;
-import unswstudyclub.model.Study;
+import unswstudyclub.model.Student;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class StudentAndTutorService {
+public class StudentService {
 
     private final UnswStudyClubDao unswStudyClubDao;
 
     @Autowired
-    public StudentAndTutorService(@Qualifier("postgres") UnswStudyClubDao unswStudyClubDao) {
+    public StudentService(@Qualifier("postgres") UnswStudyClubDao unswStudyClubDao) {
         this.unswStudyClubDao = unswStudyClubDao;
     }
 
@@ -26,7 +25,7 @@ public class StudentAndTutorService {
         return unswStudyClubDao.addStudent(personId, courseId);
     }
 
-    public List<Study> selectAllStudent(){
+    public List<Student> selectAllStudent(){
         return unswStudyClubDao.selectAllStudent();
     }
 
@@ -34,7 +33,7 @@ public class StudentAndTutorService {
         return unswStudyClubDao.removeStudent(personId, courseId);
     }
 
-    public Optional<Study> selectStudentById(UUID id) {
+    public Optional<Student> selectStudentById(UUID id) {
         return unswStudyClubDao.selectStudentById(id);
     }
 }

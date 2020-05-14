@@ -1,10 +1,9 @@
 package unswstudyclub.api;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import unswstudyclub.model.Study;
-import unswstudyclub.service.StudentAndTutorService;
+import unswstudyclub.model.Student;
+import unswstudyclub.service.StudentService;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -14,36 +13,36 @@ import java.util.UUID;
 
 @RequestMapping("api/v1")
 @RestController
-public class StudentAndTutorController {
+public class StudentController {
 
-    private final StudentAndTutorService studentAndTutorService;
+    private final StudentService studentService;
 
     @Autowired
-    public StudentAndTutorController(StudentAndTutorService studentAndTutorService) {
-        this.studentAndTutorService = studentAndTutorService;
+    public StudentController(StudentService studentService) {
+        this.studentService = studentService;
     }
 
     @PostMapping(path="/student")
     public int addStudent(@NotNull @RequestParam(name = "id") UUID studentId,
                           @NotNull @RequestParam(name = "course") UUID courseId) {
-        return studentAndTutorService.addStudent(studentId, courseId);
+        return studentService.addStudent(studentId, courseId);
     }
 
     @GetMapping(path="/student")
-    public List<Study> selectAllStudent(){
-        return studentAndTutorService.selectAllStudent();
+    public List<Student> selectAllStudent(){
+        return studentService.selectAllStudent();
     }
 
     @GetMapping(path="/student/{id}")
-    public Optional<Study> selectStudentById(@PathVariable("id") UUID id){
-        return studentAndTutorService.selectStudentById(id);
+    public Optional<Student> selectStudentById(@PathVariable("id") UUID id){
+        return studentService.selectStudentById(id);
     }
 
 
     @DeleteMapping(path="/student")
     public int removeStudent(@NotNull @RequestParam(name = "id") UUID studentId,
                              @NotNull @RequestParam(name = "course") UUID courseId) {
-        return studentAndTutorService.removeStudent(studentId, courseId);
+        return studentService.removeStudent(studentId, courseId);
     }
 
 

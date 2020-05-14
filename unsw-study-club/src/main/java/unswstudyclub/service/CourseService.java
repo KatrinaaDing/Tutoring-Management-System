@@ -20,7 +20,6 @@ public class CourseService {
         this.unswStudyClubDao = UnswStudyClubDao;
     }
 
-
     public int addCourse(Course course) {
         return unswStudyClubDao.insertCourse(course);
     }

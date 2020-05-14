@@ -2,14 +2,13 @@ package unswstudyclub.model;
 
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.UUID;
 
-public class Study {
-
+public class Tutor {
     private Person person;
     private List<Course> courses;
+    private int likes = 0;
 
-    public Study(Person person) {
+    public Tutor(Person person) {
         this.person = person;
     }
 
@@ -21,12 +20,20 @@ public class Study {
         return person;
     }
 
+    public int getLikes() {
+        return likes;
+    }
+
     public List<Course> getCourses() {
         return courses;
     }
 
     public void setPerson(Person person) {
         this.person = person;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
     }
 
     public void setCourses(List<Course> courses) {

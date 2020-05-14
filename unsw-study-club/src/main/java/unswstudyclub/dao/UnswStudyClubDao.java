@@ -2,10 +2,10 @@ package unswstudyclub.dao;
 // DAO: Data Access Object.
 // It’s a design pattern in which a data access object (DAO) is an object that provides an abstract interface
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import unswstudyclub.model.Course;
 import unswstudyclub.model.Person;
-import unswstudyclub.model.Study;
+import unswstudyclub.model.Student;
+import unswstudyclub.model.Tutor;
 
 import java.util.List;
 import java.util.Optional;
@@ -49,6 +49,14 @@ public interface UnswStudyClubDao {
     int addStudent(UUID personId, UUID courseId);
     int removeStudent(UUID personId, UUID courseId);
 
-    public List<Study> selectAllStudent();
-    Optional<Study> selectStudentById(UUID id);
+    public List<Student> selectAllStudent();
+    Optional<Student> selectStudentById(UUID id);
+
+    // Tutor
+    int addTutor(UUID personId, UUID courseId);
+    int removeTutor(UUID personId, UUID courseId);
+
+    public List<Tutor> selectAllTutor();
+    Optional<Tutor> selectTutorById(UUID id);
+
 }
