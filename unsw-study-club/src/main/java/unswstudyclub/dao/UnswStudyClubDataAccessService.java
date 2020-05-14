@@ -209,7 +209,8 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
                                     "SELECT c.id, c.code, c.name, c.handbook, s.start_date " +
                                             "FROM Student s " +
                                             "JOIN Course c " +
-                                            "ON s.study = c.id",
+                                            "ON s.study = c.id " +
+                                            "WHERE s.id = '" + id + "'",
                                     (rs, i) -> {
                                         UUID courseId = UUID.fromString(rs.getString("id"));
                                         String code = rs.getString("code");
@@ -229,8 +230,7 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
     public List<Study> selectAllStudent(){
         final String sql = "SELECT DISTINCT id FROM Student";
         return jdbcTemplate.query(sql, (resultSet, i) -> {
-
-            Optional<Study> s =  selectStudentById(UUID.fromString(resultSet.getString("id")));
+            Optional<Study> s = selectStudentById(UUID.fromString(resultSet.getString("id")));
             return s.get();
         });
     }
