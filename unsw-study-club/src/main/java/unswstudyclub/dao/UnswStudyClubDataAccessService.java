@@ -3,10 +3,7 @@ package unswstudyclub.dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import unswstudyclub.model.Course;
-import unswstudyclub.model.Person;
-import unswstudyclub.model.Student;
-import unswstudyclub.model.Tutor;
+import unswstudyclub.model.*;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -61,7 +58,7 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
     @Override
     public Optional<Person> selectPersonById(UUID id) {
         final String sql = "SELECT * FROM Person WHERE id = ?";
-        Person person = jdbcTemplate.queryForObject(
+        Person people = jdbcTemplate.queryForObject(
                 sql,
                 new Object[]{id},
                 (resultSet, i) -> {
@@ -79,7 +76,7 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
                 });
 
         // return null if the person not found
-        return Optional.ofNullable(person);
+        return Optional.ofNullable(people);
     }
 
     @Override
@@ -293,5 +290,59 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
             tutor.setCourses(courses);
         }
         return Optional.ofNullable(tutor);
+    }
+
+    @Override
+    public int addAdmin(UUID id, Admin admin) {
+        return jdbcTemplate.update("INSERT INTO Admin VALUES (?, ?, ?)",
+                                    id,
+                                    admin.getEmail(),
+                                    admin.getPassword()
+        );
+    }
+
+    @Override
+    public int deleteAdminById(UUID id) {
+        return jdbcTemplate.update("DELETE FROM Admin WHERE id = ?", id);
+    }
+
+    @Override
+    public List<Admin> selectAllAdmin() {
+        final String query = "SELECT * FROM Admin";
+        return jdbcTemplate.query(query, (rs, i) -> {
+           UUID id = UUID.fromString(rs.getString("id"));
+           String email = rs.getString("email");
+           String password = rs.getString("password");
+           return new Admin(id, email, password);
+        });
+    }
+
+    @Override
+    public Optional<Admin> selectAdminById(UUID id) {
+        final String sql = "SELECT * FROM Admin WHERE id = ?";
+        Admin admins = jdbcTemplate.queryForObject(
+                sql,
+                new Object[]{id},
+                (rs, i) -> {
+                    String email = rs.getString("email");
+                    String password = rs.getString("password");
+                    return new Admin(id, email, password);
+                }
+        );
+        return Optional.ofNullable(admins);
+    }
+
+    @Override
+    public int updateAdminById(UUID id, Admin admin) {
+        return jdbcTemplate.update(
+                "UPDATE Admin SET " +
+                        "email = ?, " +
+                        "password = ?," +
+                        "WHERE id = ?",
+                admin.getEmail(),
+                admin.getPassword(),
+                id
+        );
+
     }
 }
