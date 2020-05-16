@@ -337,7 +337,7 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
         return jdbcTemplate.update(
                 "UPDATE Admin SET " +
                         "email = ?, " +
-                        "password = ?," +
+                        "password = ? " +
                         "WHERE id = ?",
                 admin.getEmail(),
                 admin.getPassword(),
