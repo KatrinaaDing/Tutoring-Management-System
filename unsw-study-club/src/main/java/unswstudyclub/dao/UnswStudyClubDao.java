@@ -29,7 +29,6 @@ public interface UnswStudyClubDao {
 
     int insertCourse(UUID id, Course course);
 
-    // generate a random id and insert the person with the id
     default int insertCourse(Course course) {
         UUID id = UUID.randomUUID();
         return insertCourse(id, course);
@@ -68,4 +67,17 @@ public interface UnswStudyClubDao {
     List<Admin> selectAllAdmin();
     Optional<Admin> selectAdminById(UUID id);
     int updateAdminById(UUID id, Admin admin);
+
+    // Video
+
+    int uploadVideo(UUID id, Video video);
+
+    default int uploadVideo(Video video) {
+        UUID id = UUID.randomUUID();
+        return uploadVideo(id, video);
+    }
+
+    List<Video> selectVideoByCourseCode(String code);
+    int deleteVideoById(UUID id);
+    int updateVideoById(UUID id, Video newVideo);
 }

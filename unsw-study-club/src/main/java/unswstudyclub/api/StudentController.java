@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 
-@RequestMapping("api/v2")
+@RequestMapping("api/v6")
 @RestController
 public class StudentController {
 
@@ -34,7 +34,7 @@ public class StudentController {
     }
 
     @GetMapping(path="/student/{id}")
-    public Optional<Student> selectStudentById(@PathVariable("id") UUID id){
+    public Optional<Student> selectStudentById(@NotNull @PathVariable("id") UUID id){
         return studentService.selectStudentById(id);
     }
 

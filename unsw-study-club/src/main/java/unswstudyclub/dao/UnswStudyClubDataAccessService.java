@@ -23,15 +23,15 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
     @Override
     public int insertPerson(UUID id, Person person) {
         // exp and join_date will be automatically initialized
-        return jdbcTemplate.update("INSERT INTO Person VALUES (?, ?, ?, ?, ?, ?, ?, ?)" ,
-                                id,
-                                person.getFirstName(),
-                                person.getLastName(),
-                                person.getEmail(),
-                                person.getPassword(),
-                                person.getNickName(),
-                                person.getProfileImage(),
-                                person.getGender()
+        return jdbcTemplate.update("INSERT INTO Person VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                id,
+                person.getFirstName(),
+                person.getLastName(),
+                person.getEmail(),
+                person.getPassword(),
+                person.getNickName(),
+                person.getProfileImage(),
+                person.getGender()
         );
     }
 
@@ -343,6 +343,55 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
                 admin.getPassword(),
                 id
         );
+    }
 
+    @Override
+    public int uploadVideo(UUID id, Video video) {
+        return jdbcTemplate.update("INSERT INTO Video VALUES (?, ?, ?, ?, ?, ?)",
+                id,
+                video.getLink(),
+                video.getTitle(),
+                video.getDescription(),
+                video.getCourse(),
+                video.getUploader()
+        );
+    }
+
+
+    @Override
+    public List<Video> selectVideoByCourseCode(String code) {
+        final String sql = "SELECT * FROM Video WHERE course = '" + code + "'";
+        return jdbcTemplate.query(sql, (rs, i) -> {
+            UUID id = UUID.fromString(rs.getString("id"));
+            String link = rs.getString("link");
+            String title = rs.getString("title");
+            String description = rs.getString("description");
+            String course = rs.getString("course");
+            UUID uploader = UUID.fromString(rs.getString("uploader"));
+            Timestamp uploadDate = rs.getTimestamp("upload_date");
+            return new Video(id, link, title, description, course, uploader, uploadDate);
+        });
+    }
+
+    @Override
+    public int deleteVideoById(UUID id) {
+        return jdbcTemplate.update("DELETE FROM Video WHERE id = ?", id);
+    }
+
+    @Override
+    public int updateVideoById(UUID id, Video newVideo) {
+        return jdbcTemplate.update(
+                "UPDATE Video SET " +
+                        "link = ?, " +
+                        "title = ?, " +
+                        "description = ?," +
+                        "course = ? " +
+                        "WHERE id = ? ",
+                newVideo.getLink(),
+                newVideo.getTitle(),
+                newVideo.getDescription(),
+                newVideo.getCourse(),
+                id
+        );
     }
 }

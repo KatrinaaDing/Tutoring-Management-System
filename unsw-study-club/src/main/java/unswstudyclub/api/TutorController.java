@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@RequestMapping("api/v2")
+@RequestMapping("api/v6")
 @RestController
 public class TutorController {
 
@@ -34,7 +34,7 @@ public class TutorController {
     }
 
     @GetMapping(path="/tutor/{id}")
-    public Optional<Tutor> selectTutorById(@PathVariable("id") UUID id){
+    public Optional<Tutor> selectTutorById(@NotNull @PathVariable("id") UUID id){
         return tutorService.selectTutorById(id);
     }
 

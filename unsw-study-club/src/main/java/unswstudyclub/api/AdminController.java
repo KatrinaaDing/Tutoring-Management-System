@@ -7,10 +7,11 @@ import unswstudyclub.model.Admin;
 import unswstudyclub.service.AdminService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
 
-@RequestMapping("api/v2")
+@RequestMapping("api/v6")
 @RestController
 public class AdminController {
 
@@ -27,7 +28,7 @@ public class AdminController {
     }
 
     @DeleteMapping(path="/admin/{id}")
-    public int removeAdmin(@PathVariable("id") UUID id) {
+    public int removeAdmin(@NotNull @PathVariable("id") UUID id) {
         return adminService.deleteAdminById(id);
     }
 
@@ -42,7 +43,7 @@ public class AdminController {
     }
 
     @PutMapping(path="/admin/{id}")
-    public int updateAdminById(@PathVariable("id") UUID id,
+    public int updateAdminById(@Valid @PathVariable("id") UUID id,
                                 @Valid @NonNull @RequestBody Admin admin) {
         return adminService.updateAdminById(id, admin);
     }

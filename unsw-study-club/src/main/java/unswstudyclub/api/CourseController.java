@@ -9,10 +9,11 @@ import unswstudyclub.model.Person;
 import unswstudyclub.service.CourseService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
 
-@RequestMapping("api/v2")
+@RequestMapping("api/v6")
 @RestController
 public class CourseController {
 
@@ -34,13 +35,13 @@ public class CourseController {
     }
 
     @GetMapping(path="/course/id/{id}")
-    public Course selectCourseById(@PathVariable("id") UUID id) {
+    public Course selectCourseById(@NotNull  @PathVariable("id") UUID id) {
         return courseService.selectCourseById(id)
                 .orElse(null);
     }
 
     @GetMapping(path="/course/code/{code}")
-    public Course selectCourseByCode(@PathVariable("code") String code){
+    public Course selectCourseByCode(@NotNull @PathVariable("code") String code){
         return courseService.selectCourseByCode(code)
                 .orElse(null);
     }

@@ -7,10 +7,11 @@ import unswstudyclub.model.Person;
 import unswstudyclub.service.PersonService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
 
-@RequestMapping("api/v2")
+@RequestMapping("api/v6")
 @RestController
 public class PersonController {
 
@@ -32,7 +33,7 @@ public class PersonController {
     }
 
     @GetMapping(path="/person/{id}")
-    public Person getPersonById(@PathVariable("id") UUID id) {
+    public Person getPersonById(@NotNull  @PathVariable("id") UUID id) {
         return personService.getPersonById(id)
                 .orElse(null);
     }
