@@ -3,6 +3,7 @@ package unswstudyclub.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -16,6 +17,7 @@ import static unswstudyclub.security.ApplicationUserRole.*;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true) // need to specify to recognize @PreAuthorize in controller
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final PasswordEncoder passwordEncoder;
@@ -28,12 +30,13 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
+//                .csrf().disable() // csrf token. use for preventing attacker forging a request. Recommend to use CSRF protection for any request that could be processed by a browser by normal users, or can be disable if the service is used by non-browser clients
                 .authorizeRequests()
                 .antMatchers("/", "index", "/css/*", "/js/*").permitAll()
-                .antMatchers("/api/**").hasRole(STUDENT.name())
+//                .antMatchers("/api/**").hasRole(STUDENT.name())
 
                 // order of matchers matter
+                // those can be deleted if annotations are using
 
                 //.antMatchers(HttpMethod.DELETE, "/management/api/**").hasAuthority(COURSE_WRITE.getPermission()) // authorization only on DELETE with specific api
                 //.antMatchers(HttpMethod.POST, "/management/api/**").hasAuthority(COURSE_WRITE.getPermission())
@@ -63,7 +66,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .build();
 
         UserDetails tom = User.builder()
-                .username("linda")
+                .username("tom")
                 .password(passwordEncoder.encode("pw123"))
 //                .roles(ApplicationUserRole.ADMINTRAINEE.name())
                 .authorities(ADMINTRAINEE.getGrantedAuthorities())   // authority on permission

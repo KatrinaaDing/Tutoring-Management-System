@@ -3,6 +3,7 @@ package unswstudyclub.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import unswstudyclub.model.Course;
 import unswstudyclub.model.Person;

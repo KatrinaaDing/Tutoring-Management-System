@@ -1,6 +1,7 @@
 package unswstudyclub.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import unswstudyclub.model.Student;
 import unswstudyclub.service.StudentService;
@@ -23,6 +24,7 @@ public class StudentController {
     }
 
     @PostMapping(path="/student")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ADMINTRAINEE')")
     public int addStudent(@NotNull @RequestParam(name = "id") UUID studentId,
                           @NotNull @RequestParam(name = "course") UUID courseId) {
         return studentService.addStudent(studentId, courseId);
@@ -40,6 +42,7 @@ public class StudentController {
 
 
     @DeleteMapping(path="/student")
+    @PreAuthorize("hasAuthority('student:write')")
     public int removeStudent(@NotNull @RequestParam(name = "id") UUID studentId,
                              @NotNull @RequestParam(name = "course") UUID courseId) {
         return studentService.removeStudent(studentId, courseId);
