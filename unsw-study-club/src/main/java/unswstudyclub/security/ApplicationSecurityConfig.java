@@ -13,6 +13,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
+import java.util.concurrent.TimeUnit;
+
 import static unswstudyclub.security.ApplicationUserRole.*;
 
 @Configuration
@@ -30,10 +32,12 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-//                .csrf().disable() // csrf token. use for preventing attacker forging a request. Recommend to use CSRF protection for any request that could be processed by a browser by normal users, or can be disable if the service is used by non-browser clients
+                .csrf().disable() // csrf (Cross Site Request Forgery) token disabled. use for preventing attacker forging a request. Recommend to use CSRF protection for any request that could be processed by a browser by normal users, and can be disable if the service is used by non-browser clients (e.g. postman)
+//                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // enable csrf and send automatically by spring boot
+//                .and()
                 .authorizeRequests()
                 .antMatchers("/", "index", "/css/*", "/js/*").permitAll()
-//                .antMatchers("/api/**").hasRole(STUDENT.name())
+//                .antMatchers("/api/**").hasRole(STUDENT.name())   // permission on role
 
                 // order of matchers matter
                 // those can be deleted if annotations are using
@@ -41,11 +45,24 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 //.antMatchers(HttpMethod.DELETE, "/management/api/**").hasAuthority(COURSE_WRITE.getPermission()) // authorization only on DELETE with specific api
                 //.antMatchers(HttpMethod.POST, "/management/api/**").hasAuthority(COURSE_WRITE.getPermission())
                 //.antMatchers(HttpMethod.PUT, "/management/api/**").hasAuthority(COURSE_WRITE.getPermission())
-                //.antMatchers("/management/api/**").hasAnyRole(ADMIN.name(), ADMINTRANIEE.name())
+                //.antMatchers("/management/api/**").hasAnyRole(ADMIN.name(), ADMINTRANIEE.name())                  // auth on role
                 .anyRequest()
                 .authenticated()
                 .and()
-                .httpBasic();
+
+                // Basic auth: HTTPS recommended, simple and fast, can't logout
+//                .httpBasic()
+
+                // form base auth: Username & pw, standard in most websites, forms (full control), can logout, https recommended
+                // Session id usually expires after 30 min , but can be stored in "in memory database" by default
+                .formLogin()
+                .loginPage("/login").permitAll()
+                .defaultSuccessUrl("/courses", true)
+                .and()
+                .rememberMe()   // session id expired in 2 wks by default, and has its own cookie stored in db: 1. username, 2. expiration time, 3. md5 hash of the above 2 values
+                    .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(21))    // extends validation date of session id
+                    .key("somethingverysecured")
+        ;
     }
 
     @Override

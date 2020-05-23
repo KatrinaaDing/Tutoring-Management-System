@@ -31,6 +31,7 @@ public class StudentController {
     }
 
     @GetMapping(path="/student")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ADMINTRAINEE')")
     public List<Student> selectAllStudent(){
         return studentService.selectAllStudent();
     }
