@@ -15,7 +15,7 @@ public class TemplateController {
         return "login";
     }
 
-    @GetMapping(path="course")
+    @GetMapping(path="courses")
     public String getCourses() {
         return "courses";
     }

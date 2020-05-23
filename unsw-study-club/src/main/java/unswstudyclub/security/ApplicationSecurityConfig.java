@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.util.concurrent.TimeUnit;
 
@@ -37,7 +38,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .and()
                 .authorizeRequests()
                 .antMatchers("/", "index", "/css/*", "/js/*").permitAll()
-//                .antMatchers("/api/**").hasRole(STUDENT.name())   // permission on role
+//              .antMatchers("/api/**").hasRole(STUDENT.name())   // permission on role
 
                 // order of matchers matter
                 // those can be deleted if annotations are using
@@ -56,12 +57,24 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 // form base auth: Username & pw, standard in most websites, forms (full control), can logout, https recommended
                 // Session id usually expires after 30 min , but can be stored in "in memory database" by default
                 .formLogin()
-                .loginPage("/login").permitAll()
-                .defaultSuccessUrl("/courses", true)
+                    .loginPage("/login")
+                    .permitAll()
+                    .defaultSuccessUrl("/courses", true)
+                    .passwordParameter("password")      // parameter: get the value from other input element. value = name of the new element in html
+                    .usernameParameter("username")      // no need if want to use default name (e.g. "password", "username"
                 .and()
                 .rememberMe()   // session id expired in 2 wks by default, and has its own cookie stored in db: 1. username, 2. expiration time, 3. md5 hash of the above 2 values
                     .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(21))    // extends validation date of session id
                     .key("somethingverysecured")
+                    .rememberMeParameter("remember-me")
+                .and()
+                .logout()       // enable logout with deleting cookies
+                    .logoutUrl("/logout")
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))  // should be deleted if using csrf (using csrf should use POST to logout)
+                    .clearAuthentication(true)
+                    .invalidateHttpSession(true)
+                    .deleteCookies("JSESSIONID", "remember-me")
+                    .logoutSuccessUrl("/login")
         ;
     }
 
