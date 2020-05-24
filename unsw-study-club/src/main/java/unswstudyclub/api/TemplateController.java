@@ -2,7 +2,9 @@ package unswstudyclub.api;
 
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 
@@ -20,5 +22,10 @@ public class TemplateController {
         return "courses";
     }
 
+    @GetMapping(path="courses/{title}")
+    public String getCourse(@PathVariable("title") String title, Model model) {
+        model.addAttribute("title", title);
+        return "lesson";
+    }
 
 }

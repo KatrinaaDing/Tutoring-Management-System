@@ -24,14 +24,14 @@ public class StudentController {
     }
 
     @PostMapping(path="/student")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ADMINTRAINEE')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public int addStudent(@NotNull @RequestParam(name = "id") UUID studentId,
                           @NotNull @RequestParam(name = "course") UUID courseId) {
         return studentService.addStudent(studentId, courseId);
     }
 
     @GetMapping(path="/student")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ADMINTRAINEE')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public List<Student> selectAllStudent(){
         return studentService.selectAllStudent();
     }

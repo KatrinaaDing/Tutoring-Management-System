@@ -2,6 +2,7 @@ package unswstudyclub.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import unswstudyclub.model.*;
 
@@ -10,14 +11,18 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static unswstudyclub.security.ApplicationUserRole.STUDENT;
+
 @Repository("postgres")
 public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UnswStudyClubDataAccessService(JdbcTemplate jdbcTemplate) {
+    public UnswStudyClubDataAccessService(JdbcTemplate jdbcTemplate, PasswordEncoder passwordEncoder) {
         this.jdbcTemplate = jdbcTemplate;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -394,4 +399,25 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
                 id
         );
     }
+
+    @Override
+    public Optional<ApplicationUser> selectApplicationUserByUsername(String email) {
+        final String sql = "SELECT * FROM Person WHERE email = ?";
+        ApplicationUser appUser = jdbcTemplate.queryForObject(
+                sql,
+                new Object[] {email},
+                (rs, i) -> {
+                    String password = rs.getString("password");
+                    return new ApplicationUser(STUDENT.getGrantedAuthorities(),
+                            passwordEncoder.encode(password),
+                            email,
+                            true,
+                            true,
+                            true,
+                            true);
+                }
+        );
+        return Optional.ofNullable(appUser);
+    }
+
 }

@@ -80,4 +80,8 @@ public interface UnswStudyClubDao {
     List<Video> selectVideoByCourseCode(String code);
     int deleteVideoById(UUID id);
     int updateVideoById(UUID id, Video newVideo);
+
+    // auth
+
+    Optional<ApplicationUser> selectApplicationUserByUsername(String username);
 }
