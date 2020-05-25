@@ -420,4 +420,66 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
         return Optional.ofNullable(appUser);
     }
 
+    @Override
+    public int addCase(UUID id, Case c) {
+        return jdbcTemplate.update(
+                "INSERT INTO Case VALUES (?, ?, ?, ?, ?)",
+                id,
+                c.getSubject(),
+                c.getTitle(),
+                c.getDescription(),
+                c.getDate()
+        );
+    }
+
+    @Override
+    public List<Case> getAllCases() {
+        return jdbcTemplate.query(
+                "SELECT * FROM Case",
+                (rs, i) -> {
+                    UUID id = UUID.fromString(rs.getString("id"));
+                    String subject = rs.getString("subject");
+                    String title = rs.getString("title");
+                    String description = rs.getString("description");
+                    Timestamp date = rs.getTimestamp("start_date");
+
+                    return new Case(id, subject, title, description, date);
+                }
+        );
+    }
+
+    @Override
+    public Optional<Case> getCaseById(UUID id) {
+        Case c = jdbcTemplate.queryForObject(
+                "SELECT * FROM Case WHERE id = ?",
+                new Object[]{id},
+                (rs, i) -> {
+                    String subject = rs.getString("subject");
+                    String title = rs.getString("title");
+                    String description = rs.getString("description");
+                    Timestamp date = rs.getTimestamp("start_date");
+
+                    return new Case(id, subject, title, description, date);
+                }
+        );
+        return Optional.ofNullable(c);
+    }
+
+    @Override
+    public Optional<Case> getCaseByTitle(String title) {
+        Case c = jdbcTemplate.queryForObject(
+                "SELECT * FROM Case WHERE title = ?",
+                new Object[]{title},
+                (rs, i) -> {
+                    UUID id = UUID.fromString(rs.getString("id"));
+                    String subject = rs.getString("subject");
+                    String description = rs.getString("description");
+                    Timestamp date = rs.getTimestamp("start_date");
+
+                    return new Case(id, subject, title, description, date);
+                }
+
+        );
+        return Optional.ofNullable(c);
+    }
 }

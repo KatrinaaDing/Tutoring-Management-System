@@ -84,4 +84,17 @@ public interface UnswStudyClubDao {
     // auth
 
     Optional<ApplicationUser> selectApplicationUserByUsername(String username);
+
+    // Case
+
+    int addCase(UUID id, Case c);
+
+    default int addCase(Case c) {
+        UUID id = UUID.randomUUID();
+        return addCase(id, c);
+    }
+
+    List<Case> getAllCases();
+    Optional<Case> getCaseById(UUID id);
+    Optional<Case> getCaseByTitle(String title);
 }
