@@ -38,7 +38,7 @@ public interface UnswStudyClubDao {
     Optional<Course> selectCourseByCode(String code);
     Optional<Course> selectCourseById(UUID id);
     int deleteCourseByCode(String code);
-    int updateCourseById(String code,Course newCourse);
+    int updateCourseByCode(String code,Course newCourse);
 
     // Student
 
@@ -97,4 +97,30 @@ public interface UnswStudyClubDao {
     List<Case> getAllCases();
     Optional<Case> getCaseById(UUID id);
     Optional<Case> getCaseByTitle(String title);
+
+    // comment
+
+    int addComment(UUID id, Comment c);
+
+    default int addComment(Comment c) {
+        UUID id = UUID.randomUUID();
+        return addComment(id, c);
+    }
+
+    Comment getCommentById(UUID id);
+    int updateCommentById(UUID id, Comment c);
+    int deleteCommentById(UUID id);
+
+    // subtitle
+
+    int addSubtitle(UUID id, Subtitle subtitle);
+
+    default int addSubtitle(Subtitle s) {
+        UUID id = UUID.randomUUID();
+        return addSubtitle(id, s);
+    }
+
+    List<Subtitle> getSubtitleByCase(String caseTitle);
+    int updateSubtitleById(UUID id, Subtitle subtitle);
+    int deleteSubtitleById(UUID id);
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import unswstudyclub.model.*;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -178,17 +179,18 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
     }
 
     @Override
-    public int updateCourseById(String code, Course newCourse) {
+    public int updateCourseByCode(String code, Course newCourse) {
         return jdbcTemplate.update(
                 "UPDATE Course SET" +
-                        "id = ?," +
                         "code = ?," +
                         "name = ?," +
-                        "handbook = ?",
+                        "handbook = ? " +
+                        "WHERE code = ?",
                 newCourse.getId(),
                 newCourse.getCode(),
                 newCourse.getName(),
-                newCourse.getHandbook()
+                newCourse.getHandbook(),
+                code
         );
     }
 
@@ -482,4 +484,129 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
         );
         return Optional.ofNullable(c);
     }
+
+
+    @Override
+    public int addSubtitle(UUID id, Subtitle subtitle) {
+        return jdbcTemplate.update(
+                "INSERT INTO Subtitle VALUES (?, ?, ?, ?)",
+                id,
+                subtitle.getCaseTitle(),
+                subtitle.getPart(),
+                subtitle.getContent()
+        );
+    }
+
+    @Override
+    public List<Subtitle> getSubtitleByCase(String caseTitle) {
+        return jdbcTemplate.query(
+                "SELECT * FROM Subtitle WHERE caseTitle = ?",
+                new Object[]{caseTitle},
+                (rs, i) -> {
+                    UUID id = UUID.fromString(rs.getString("id"));
+                    String caseTtile = rs.getString("case_title");
+                    String part = rs.getString("part");
+                    String content = rs.getString("content");
+
+                    Subtitle s = new Subtitle(id, caseTitle, part, content);
+                    ArrayList<Comment> cs = new ArrayList<Comment>(getCommentsBySubtitle(id));
+                    s.setComments(cs);
+                    return s;
+                }
+        );
+    }
+
+    @Override
+    public int updateSubtitleById(UUID id, Subtitle subtitle) {
+        return jdbcTemplate.update(
+                "UPDATE Subtitle SET content = ?",
+                subtitle.getContent()
+        );
+    }
+
+    @Override
+    public int deleteSubtitleById(UUID id) {
+        return jdbcTemplate.update(
+                "DELETE FROM Subtitle WHERE id = ?",
+                id
+        );
+    }
+
+    @Override
+    public int addComment(UUID id, Comment c) {
+        String subtitleText = jdbcTemplate.queryForObject(
+                "SELECT id FROM Subtitle WHERE content = ?",
+                new Object[]{c.getSubtitle()},
+                String.class
+        );
+
+        String uploader = jdbcTemplate.queryForObject(
+                "SELECT first_name||' '||last_name " +
+                        "FROM Person " +
+                        "WHERE id = ?",
+                new Object[]{c.getUploader()},
+                String.class
+        );
+
+        return jdbcTemplate.update("INSERT INTO Comment VALUES (?, ?, ?, ?, ?)",
+                id,
+                subtitleText,
+                uploader,
+                c.getContent()
+        );
+    }
+
+    @Override
+    public Comment getCommentById(UUID id) {
+        return jdbcTemplate.queryForObject(
+                "SELECT id, subtitle_text, uploader_text, content, post_date " +
+                        "From Comment_View " +
+                        "WHERE id = ?",
+                new Object[]{id},
+                (rs, i) -> {
+                    String subtitle = rs.getString("subtitle");
+                    String content = rs.getString("content");
+                    String uploader = rs.getString("uploader_text");
+                    Timestamp postDate = rs.getTimestamp("post_date");
+                    return new Comment(id, subtitle, content, uploader, postDate);
+                }
+        );
+    }
+
+    @Override
+    public int updateCommentById(UUID id, Comment c) {
+        return jdbcTemplate.update(
+                "UPDATE Comment SET " +
+                        "content = ? " +
+                        "WHERE id = ?",
+                    c.getContent(),
+                    id
+                );
+    }
+
+    @Override
+    public int deleteCommentById(UUID id) {
+        return 0;
+    }
+
+    private List<Comment> getCommentsBySubtitle(UUID subtitleId) {
+        return jdbcTemplate.query(
+                "SELECT id, subtitle_text, uploader_text, content, post_date " +
+                        "FROM Comment_View " +
+                        "WHERE subtitle_id = ?",
+                new Object[]{subtitleId},
+                (rs, i) -> {
+                    UUID id = UUID.fromString(rs.getString("id"));
+                    String uploader = rs.getString("uploader");
+                    String subtitleText = rs.getString("subtitle_text");
+                    String content = rs.getString("content");
+                    Timestamp post_date = rs.getTimestamp("post_date");
+
+                    Comment c  =  new Comment(id, subtitleText, content, uploader, post_date);
+                    c.setPostDate(post_date);
+                    return c;
+                }
+        );
+    }
+
 }

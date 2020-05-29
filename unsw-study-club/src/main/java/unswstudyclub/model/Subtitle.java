@@ -1,20 +1,22 @@
 package unswstudyclub.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 import java.util.UUID;
 
 public class Subtitle {
 
     private UUID id;
-    private UUID caseTitle;
+    private String caseTitle;
     private String part;
     private String content;
     private ArrayList<Comment> comments;
 
-    public Subtitle(UUID id,
-                    UUID caseTitle,
-                    String part,
-                    String content) {
+    public Subtitle(@JsonProperty("id") UUID id,
+                    @JsonProperty("caseT") String caseTitle,
+                    @JsonProperty("part") String part,
+                    @JsonProperty("content") String content) {
         this.id = id;
         this.caseTitle = caseTitle;
         this.part = part;
@@ -25,11 +27,11 @@ public class Subtitle {
         return id;
     }
 
-    public UUID getCaseTitle() {
+    public String getCaseTitle() {
         return caseTitle;
     }
 
-    public void setCaseTitle(UUID caseTitle) {
+    public void setCaseTitle(String caseTitle) {
         this.caseTitle = caseTitle;
     }
 
