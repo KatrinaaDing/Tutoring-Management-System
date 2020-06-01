@@ -425,7 +425,7 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
     @Override
     public int addCase(UUID id, Case c) {
         return jdbcTemplate.update(
-                "INSERT INTO Case VALUES (?, ?, ?, ?, ?)",
+                "INSERT INTO Case_Study VALUES (?, ?, ?, ?, ?)",
                 id,
                 c.getSubject(),
                 c.getTitle(),
@@ -437,7 +437,7 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
     @Override
     public List<Case> getAllCases() {
         return jdbcTemplate.query(
-                "SELECT * FROM Case",
+                "SELECT * FROM Case_Study",
                 (rs, i) -> {
                     UUID id = UUID.fromString(rs.getString("id"));
                     String subject = rs.getString("subject");
@@ -453,7 +453,7 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
     @Override
     public Optional<Case> getCaseById(UUID id) {
         Case c = jdbcTemplate.queryForObject(
-                "SELECT * FROM Case WHERE id = ?",
+                "SELECT * FROM Case_Study WHERE id = ?",
                 new Object[]{id},
                 (rs, i) -> {
                     String subject = rs.getString("subject");
@@ -470,7 +470,7 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
     @Override
     public Optional<Case> getCaseByTitle(String title) {
         Case c = jdbcTemplate.queryForObject(
-                "SELECT * FROM Case WHERE title = ?",
+                "SELECT * FROM Case_Study WHERE title = ?",
                 new Object[]{title},
                 (rs, i) -> {
                     UUID id = UUID.fromString(rs.getString("id"));

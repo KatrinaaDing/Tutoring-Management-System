@@ -29,7 +29,7 @@ public class SubtitleService {
     }
 
     public int updateSubtitleById(UUID id, Subtitle subtitle) {
-        return unswStudyClubDao.updateSubtitleById(id);
+        return unswStudyClubDao.updateSubtitleById(id, subtitle);
     }
 
     public int deleteSubtitleById(UUID id) {
