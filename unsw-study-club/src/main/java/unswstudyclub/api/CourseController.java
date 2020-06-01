@@ -54,7 +54,7 @@ public class CourseController {
 
     @PutMapping(path="/course/{code}")
     public int updateCourseByCode(@PathVariable("code") String code, @Valid @NonNull @RequestBody Course newCourse) {
-        return courseService.updateCourseById(code, newCourse);
+        return courseService.updateCourseByCode(code, newCourse);
     }
 
 

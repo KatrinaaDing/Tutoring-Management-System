@@ -40,8 +40,8 @@ public class CourseService {
         return unswStudyClubDao.deleteCourseByCode(code);
     }
 
-    public int updateCourseById(String code, Course newCourse) {
-        return updateCourseById(code, newCourse);
+    public int updateCourseByCode(String code, Course newCourse) {
+        return updateCourseByCode(code, newCourse);
     }
 
 
