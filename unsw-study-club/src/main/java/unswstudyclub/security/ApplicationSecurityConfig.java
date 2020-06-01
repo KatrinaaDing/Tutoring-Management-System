@@ -46,7 +46,8 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .and()
                 .authorizeRequests()
                 .antMatchers("/", "index", "/css/*", "/js/*").permitAll()
-//              .antMatchers("/api/**").hasRole(STUDENT.name())   // permission on role
+                .antMatchers("/api/**").permitAll()
+//                .antMatchers("/api/**").hasRole(STUDENT.name())   // permission on role
 
                 // order of matchers matter
                 // those can be deleted if annotations are using

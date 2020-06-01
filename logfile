@@ -1,0 +1,5 @@
+2020-06-01 16:17:04.275 AEST [47850] LOG:  listening on IPv6 address "::1", port 5432
+2020-06-01 16:17:04.275 AEST [47850] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2020-06-01 16:17:04.275 AEST [47850] LOG:  listening on Unix socket "/tmp/.s.PGSQL.5432"
+2020-06-01 16:17:04.306 AEST [47851] LOG:  database system was shut down at 2020-06-01 00:08:16 AEST
+2020-06-01 16:17:04.313 AEST [47850] LOG:  database system is ready to accept connections

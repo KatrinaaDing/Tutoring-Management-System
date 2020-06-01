@@ -17,12 +17,18 @@ public class Case {
                 @JsonProperty("subject") String subject,
                 @JsonProperty("title") String title,
                 @JsonProperty("description") String description,
-                @JsonProperty("date") Timestamp date) {
+                @JsonProperty("date") String date) {
         this.id = id;
         this.subject = subject;
         this.title = title;
         this.description = description;
-        this.date = date;
+        this.date = Timestamp.valueOf(date);
+    }
+    public Case(UUID id, String subject, String title,String description) {
+        this.id = id;
+        this.subject = subject;
+        this.title = title;
+        this.description = description;
     }
 
     public UUID getId() {
@@ -59,5 +65,9 @@ public class Case {
 
     public void setDate(Timestamp date) {
         this.date = date;
+    }
+
+    public void setDate(String date) {
+        this.date = Timestamp.valueOf(date);
     }
 }

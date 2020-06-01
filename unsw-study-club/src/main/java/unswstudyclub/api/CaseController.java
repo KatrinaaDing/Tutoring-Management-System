@@ -33,12 +33,12 @@ public class CaseController {
         return caseService.getAllCases();
     }
 
-    @GetMapping(path="/case/{id}")
+    @GetMapping(path="/case/id/{id}")
     public Case getCaseById(@PathVariable("id") UUID id){
         return caseService.getCaseById(id).orElse(null);
     }
 
-    @GetMapping(path="/case/{title}")
+    @GetMapping(path="/case/title/{title}")
     public Case getCaseByTitle(@PathVariable("title") String title){
         return caseService.getCaseByTitle(title).orElse(null);
     }
