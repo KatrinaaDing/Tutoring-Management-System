@@ -30,7 +30,7 @@ public class CommentController {
     }
 
     @PutMapping("/comment/{id}")
-    public int updateCommentById(@PathVariable("id") UUID id, Comment c) {
+    public int updateCommentById(@PathVariable("id") UUID id, @RequestBody Comment c) {
         return commentService.updateCommentById(id, c);
     }
 

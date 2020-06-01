@@ -14,7 +14,7 @@ public class Subtitle {
     private ArrayList<Comment> comments;
 
     public Subtitle(@JsonProperty("id") UUID id,
-                    @JsonProperty("caseT") String caseTitle,
+                    @JsonProperty("caseTitle") String caseTitle,
                     @JsonProperty("part") String part,
                     @JsonProperty("content") String content) {
         this.id = id;

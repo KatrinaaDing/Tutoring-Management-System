@@ -494,10 +494,15 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
 
     @Override
     public int addSubtitle(UUID id, Subtitle subtitle) {
+        UUID caseId = jdbcTemplate.queryForObject(
+                "SELECT id FROM Case_Study WHERE title = ?",
+                new Object[]{subtitle.getCaseTitle()},
+                UUID.class
+        );
         return jdbcTemplate.update(
                 "INSERT INTO Subtitle VALUES (?, ?, ?, ?)",
                 id,
-                subtitle.getCaseTitle(),
+                caseId,
                 subtitle.getPart(),
                 subtitle.getContent()
         );
@@ -506,11 +511,13 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
     @Override
     public List<Subtitle> getSubtitleByCase(String caseTitle) {
         return jdbcTemplate.query(
-                "SELECT * FROM Subtitle WHERE caseTitle = ?",
+                "SELECT s.id, c.title AS case_title, s.part, s.content " +
+                        "FROM Subtitle s " +
+                        "JOIN Case_Study c on s.case_title = c.id " +
+                        "WHERE c.title = ?",
                 new Object[]{caseTitle},
                 (rs, i) -> {
                     UUID id = UUID.fromString(rs.getString("id"));
-                    String caseTtile = rs.getString("case_title");
                     String part = rs.getString("part");
                     String content = rs.getString("content");
 
@@ -540,24 +547,18 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
 
     @Override
     public int addComment(UUID id, Comment c) {
-        String subtitleText = jdbcTemplate.queryForObject(
-                "SELECT id FROM Subtitle WHERE content = ?",
-                new Object[]{c.getSubtitle()},
-                String.class
-        );
-
-        String uploader = jdbcTemplate.queryForObject(
-                "SELECT first_name||' '||last_name " +
+        UUID uploaderId = jdbcTemplate.queryForObject(
+                "SELECT id " +
                         "FROM Person " +
                         "WHERE id = ?",
-                new Object[]{c.getUploader()},
-                String.class
+                new Object[]{c.getUploaderId()},
+                UUID.class
         );
 
-        return jdbcTemplate.update("INSERT INTO Comment VALUES (?, ?, ?, ?, ?)",
+        return jdbcTemplate.update("INSERT INTO Comment VALUES (?, ?, ?, ?)",
                 id,
-                subtitleText,
-                uploader,
+                c.getSubtitle(),
+                uploaderId,
                 c.getContent()
         );
     }
@@ -565,16 +566,17 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
     @Override
     public Comment getCommentById(UUID id) {
         return jdbcTemplate.queryForObject(
-                "SELECT id, subtitle_text, uploader_text, content, post_date " +
+                "SELECT id, subtitle_text, uploader_id, uploader_text, content, post_date " +
                         "From Comment_View " +
                         "WHERE id = ?",
                 new Object[]{id},
                 (rs, i) -> {
-                    String subtitle = rs.getString("subtitle");
+                    UUID subtitle = UUID.fromString(rs.getString("subtitle"));
+                    UUID uploaderId = UUID.fromString(rs.getString("uploader_id"));
                     String content = rs.getString("content");
                     String uploader = rs.getString("uploader_text");
                     Timestamp postDate = rs.getTimestamp("post_date");
-                    return new Comment(id, subtitle, content, uploader, postDate);
+                    return new Comment(id, subtitle, uploaderId, content, uploader, postDate);
                 }
         );
     }
@@ -592,23 +594,26 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
 
     @Override
     public int deleteCommentById(UUID id) {
-        return 0;
+        return jdbcTemplate.update(
+                "DELETE FROM Comment WHERE id = ?",
+                id
+        );
     }
 
     private List<Comment> getCommentsBySubtitle(UUID subtitleId) {
         return jdbcTemplate.query(
-                "SELECT id, subtitle_text, uploader_text, content, post_date " +
+                "SELECT id, subtitle_text, uploader_id, uploader_text, content, post_date " +
                         "FROM Comment_View " +
                         "WHERE subtitle_id = ?",
                 new Object[]{subtitleId},
                 (rs, i) -> {
                     UUID id = UUID.fromString(rs.getString("id"));
-                    String uploader = rs.getString("uploader");
-                    String subtitleText = rs.getString("subtitle_text");
+                    UUID uploaderId = UUID.fromString(rs.getString("uploader_id"));
+                    String uploader = rs.getString("uploader_text");
                     String content = rs.getString("content");
                     Timestamp post_date = rs.getTimestamp("post_date");
 
-                    Comment c  =  new Comment(id, subtitleText, content, uploader, post_date);
+                    Comment c  =  new Comment(id, subtitleId, uploaderId, content, uploader, post_date);
                     c.setPostDate(post_date);
                     return c;
                 }
