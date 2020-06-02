@@ -22,10 +22,10 @@ public class TemplateController {
         return "courses";
     }
 
-    @GetMapping(path="courses/{title}")
+    @GetMapping(path="case/{title}")
     public String getCourse(@PathVariable("title") String title, Model model) {
         model.addAttribute("title", title);
-        return "lesson";
+        return "case";
     }
 
 }

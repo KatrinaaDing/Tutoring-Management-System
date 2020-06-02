@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
 
-@RequestMapping("api/v6")
+@RequestMapping("api")
 @RestController
 public class PersonController {
 

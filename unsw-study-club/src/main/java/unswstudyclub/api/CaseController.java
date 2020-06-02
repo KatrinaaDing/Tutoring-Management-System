@@ -5,14 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 import unswstudyclub.model.Case;
-import unswstudyclub.service.AdminService;
 import unswstudyclub.service.CaseService;
 
 import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
-@RequestMapping("api/v6")
+@RequestMapping("api")
 @RestController
 public class CaseController {
 

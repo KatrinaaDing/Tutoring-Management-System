@@ -547,18 +547,10 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
 
     @Override
     public int addComment(UUID id, Comment c) {
-        UUID uploaderId = jdbcTemplate.queryForObject(
-                "SELECT id " +
-                        "FROM Person " +
-                        "WHERE id = ?",
-                new Object[]{c.getUploaderId()},
-                UUID.class
-        );
-
         return jdbcTemplate.update("INSERT INTO Comment VALUES (?, ?, ?, ?)",
                 id,
                 c.getSubtitle(),
-                uploaderId,
+                c.getUploaderId(),
                 c.getContent()
         );
     }

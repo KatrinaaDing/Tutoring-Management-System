@@ -8,7 +8,7 @@ import unswstudyclub.service.CommentService;
 
 import java.util.UUID;
 
-@RequestMapping("api/v6")
+@RequestMapping("api")
 @RestController
 public class CommentController {
 

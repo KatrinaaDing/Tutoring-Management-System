@@ -9,7 +9,7 @@ import unswstudyclub.service.SubtitleService;
 import java.util.List;
 import java.util.UUID;
 
-@RequestMapping("api/v6")
+@RequestMapping("api")
 @RestController
 public class SubtitleController {
 
