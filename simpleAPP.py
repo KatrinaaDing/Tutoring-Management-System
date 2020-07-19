@@ -1,3 +1,5 @@
+# Katrina Ding
+# 20 Jul 2020
 import psycopg2 # pip install psycopg2
 import sys
 
