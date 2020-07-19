@@ -118,15 +118,15 @@ class Person:
         self._exp = exp if (exp != "None") else self._exp
   
     def __str__(self):
-        return "%-20s|%-30s|%-20s|%-20s|%-10d|%-10d" % (self._fname + ' ' + self._lname, self._email, self._pw, self._nickname, self._exp, self._credit)
+        return "%-20s|%-30s|%-20s|%-20s|%-10s|%-10s" % (self._fname + ' ' + self._lname, self._email, self._pw, self._nickname, self._exp, self._credit)
 
 class Course:
     def __init__(self, code, name, handbook, year, term, id=None):
         self._code = code
         self._name = name
         self._handbook = handbook
-        self._term = term
-        self._year = year
+        self._term = int(term)
+        self._year = int(year)
         self._id = id
         
     @property
@@ -161,8 +161,8 @@ class Course:
         self.code = code
         self.name = name
         self.handbook = handbook
-        self.term = term
-        self.year = year
+        self.term = int(term)
+        self.year = int(year)
         return f"""UPDATE Course SET
                 code = '{self._code}', 
                 name = '{self._name}', 
@@ -190,11 +190,11 @@ class Course:
         
     @term.setter
     def term(self, term):
-        self._term = term if (term != "None") else self._term
+        self._term = int(term) if (term != "None") else self._term
         
     @year.setter
     def year(self, year):
-        self._year = year if (year != "None") else self._year
+        self._year = int(year) if (year != "None") else self._year
   
     def __str__(self):
         return "%-10s|%-30s|%-5d|%-5d|%-40s" % (self._code, self._name, self._year, self._term, self._handbook[:30]+'...')
@@ -228,7 +228,13 @@ def add(code, numOfArg):
         except Exception as e:
             print("ERROR:", e)
             print("Please try again")
-            
+
+        else:
+            if (code == PERSON):
+                people.append(obj)
+            elif (code == COURSE):
+                courses.append(obj)
+    
     return True
 
 def delete(list, obj):
@@ -288,7 +294,7 @@ def getAllPeople():
     for id, fname, lname, email, pw, nickname, profileImg, gender, exp, join_date, credit in res:
         p = Person(fname, lname, email, pw, nickname, int(credit), int(exp), id)
         people.append(p)
-        pS += f"[{len(people)-1}] " + str(p) + "\n"
+        pS += f"[{people.index(p)}] " + str(p) + "\n"
         
     if (len(people) == 0):
         print("No data found")
@@ -304,7 +310,7 @@ def getAllCourses():
     for id, code, name, handbook, term, year in res:
         c = Course(code, name, handbook, year, term, id)
         courses.append(c)
-        cS += f"[{len(courses)-1}] " + str(c) + "\n"
+        cS += f"[{courses.index(c)}] " + str(c) + "\n"
         
     if (len(courses) == 0):
         print("No data found")
@@ -382,7 +388,7 @@ while (True):
             else:
                 pS += PERSON_TITLE
                 for p in people:
-                    pS += f"[{len(people)-1}] " + str(p) + "\n"
+                    pS += f"[{people.index(p)}] " + str(p) + "\n"
             
             c = input("Do you want to only view table? (y/n) -> ")
             if (c == 'y'):
@@ -425,7 +431,7 @@ while (True):
             else:
                 cS += COURSE_TITLE
                 for c in courses:
-                    cS += f"[{len(courses)-1}] " + str(c) + "\n"
+                    cS += f"[{courses.index(c)}] " + str(c) + "\n"
             
             c = input("Do you want to only view table? (y/n) -> ")
             if (c == 'y'):
