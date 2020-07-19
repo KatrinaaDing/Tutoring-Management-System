@@ -3,3 +3,15 @@
 2020-06-01 16:17:04.275 AEST [47850] LOG:  listening on Unix socket "/tmp/.s.PGSQL.5432"
 2020-06-01 16:17:04.306 AEST [47851] LOG:  database system was shut down at 2020-06-01 00:08:16 AEST
 2020-06-01 16:17:04.313 AEST [47850] LOG:  database system is ready to accept connections
+2020-06-02 22:58:55.692 AEST [56968] LOG:  listening on IPv6 address "::1", port 5432
+2020-06-02 22:58:55.693 AEST [56968] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2020-06-02 22:58:55.694 AEST [56968] LOG:  listening on Unix socket "/tmp/.s.PGSQL.5432"
+2020-06-02 22:58:55.729 AEST [56969] LOG:  database system was shut down at 2020-06-02 12:04:12 AEST
+2020-06-02 22:58:55.735 AEST [56968] LOG:  database system is ready to accept connections
+2020-06-02 23:02:07.292 AEST [57026] ERROR:  syntax error at or near "add" at character 58
+2020-06-02 23:02:07.292 AEST [57026] STATEMENT:  alter table comment drop constraint comment_uploader_key add constraint comment_subtitle_uploader_key unique(subtitle, uploader);
+2020-06-03 21:58:39.251 AEST [56968] LOG:  received fast shutdown request
+2020-06-03 21:58:39.252 AEST [56968] LOG:  aborting any active transactions
+2020-06-03 21:58:39.253 AEST [56968] LOG:  background worker "logical replication launcher" (PID 56975) exited with exit code 1
+2020-06-03 21:58:39.253 AEST [56970] LOG:  shutting down
+2020-06-03 21:58:39.261 AEST [56968] LOG:  database system is shut down
