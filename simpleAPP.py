@@ -18,6 +18,7 @@ courses = []
 
 
 class Person:
+    # when adding person, credit and exp is set to default value, id will be set by plsql
     def __init__(self, fname, lname, email, pw, nickname, credit=0, exp=0, id=None):
         self._fname = fname;
         self._lname = lname;
@@ -200,13 +201,22 @@ class Course:
         return "%-10s|%-30s|%-5d|%-5d|%-40s" % (self._code, self._name, self._year, self._term, self._handbook[:30]+'...')
     
 
+# ================================================================ helper function
+
+# add any object into database.
+# code: integer defeined in global variables
+# numOfArg: number of expected input argument, defined in global variables
+# return value: True if the action succeed, False if Ctrl+C/Ctrl+D is typed
+
 def add(code, numOfArg):
+    # if no input or Ctrl+C/Ctrl+D typed, throw error, return to main menu
     try:
         a = input("-> ")
         alist = a.split()
     except (EOFError, KeyboardInterrupt):
         return False
     else:
+        # if num of input argument is incorrect, throw error and repeat the step
         while (len(alist) != numOfArg):
             print("ERROR: Expecting", numOfArg, "arguments, actually getting", len(alist), ", please try again.")
             try:
@@ -215,6 +225,7 @@ def add(code, numOfArg):
             except (EOFError, KeyboardInterrupt):
                 return False
 
+        # create obj corresponding to code
         if (code == PERSON):
             obj = Person(alist[0], alist[1], alist[2], alist[3], alist[4], alist[5], alist[6])
             print(f"Inserting {alist[0]} {alist[1]}, please wait...")
@@ -222,13 +233,15 @@ def add(code, numOfArg):
         elif (code == COURSE):
             obj = Course(alist[0], alist[1], alist[2], alist[3], alist[4])
             print(f"Inserting {alist[0]}, please wait...")
-            
+        
+        # try to push obj to database
         try:
             cursor.execute(obj.queryAdd)
         except Exception as e:
             print("ERROR:", e)
             print("Please try again")
 
+        # if success, add the obj into cach
         else:
             if (code == PERSON):
                 people.append(obj)
@@ -237,7 +250,13 @@ def add(code, numOfArg):
     
     return True
 
+# delete any obj from database
+# list: the cache list of data type
+# obj: the obj that want to delete
+# return value: True if the action succeed, False if Ctrl+C/Ctrl+D is typed
+
 def delete(list, obj):
+    # try to delete obj from database, if succeed, remove if from cache
     try:
         cursor.execute(obj.queryDelete)
     except Exception as e:
@@ -246,14 +265,22 @@ def delete(list, obj):
     else:
         list.remove(obj)
         print("Deleted")
-        
+
+
+# add any object into database.
+# code: integer defeined in global variables
+# numOfArg: number of expected input argument, defined in global variables
+# return value: True if the action succeed, False if Ctrl+C/Ctrl+D is typed
+
 def modify(code, numOfArg, obj):
+    # trying geting input, if Ctrl+C/Ctrl+D is typed, return to menu
     try:
         a = input("-> ")
         alist = a.split()
     except (EOFError, KeyboardInterrupt):
         return False
     else:
+        # handling wrong number of input argument
         while (len(alist) != numOfArg):
             print("ERROR: Expecting", numOfArg, "arguments, actually getting", len(alist), ", please try again.")
             try:
@@ -261,7 +288,8 @@ def modify(code, numOfArg, obj):
                 alist = a.split()
             except (EOFError, KeyboardInterrupt):
                 return False
-        #  fname, lname, email, pw, nickname,  credit=0, exp=0, id=None
+
+        # modify database according to argument
         if (code == PERSON):
             print(f"Modifying {obj.fname} {obj.lname}, please wait...")
             try:
@@ -282,17 +310,22 @@ def modify(code, numOfArg, obj):
     return True
         
     
-    
+# a text block wraper
+
 def textBlock(msg):
     return f"==============================================\n{msg}\n==============================================\n"
+
+# retrive all people and add to cache. only be called at the beginning
+# return value: None if no data in database, result string if there's some data
 
 def getAllPeople():
     cursor.execute("SELECT * FROM Person")
     res = cursor.fetchall()
+    people.clear()
     pS = ""
     pS += PERSON_TITLE
     for id, fname, lname, email, pw, nickname, profileImg, gender, exp, join_date, credit in res:
-        p = Person(fname, lname, email, pw, nickname, int(credit), int(exp), id)
+        p = Person(fname, lname, email, pw, nickname, float(credit), int(exp), id)
         people.append(p)
         pS += f"[{people.index(p)}] " + str(p) + "\n"
         
@@ -301,10 +334,14 @@ def getAllPeople():
         return None
     
     return pS
-        
+
+# retrive all courses and add to cache. only be called at the beginning
+# return value: None if no data in database, result string if there's some data
+
 def getAllCourses():
     cursor.execute("SELECT * FROM Course")
     res = cursor.fetchall()
+    courses.clear()
     cS = ""
     cS += COURSE_TITLE
     for id, code, name, handbook, term, year in res:
@@ -331,6 +368,7 @@ actions = """
     [10] check/modify/delete any video (NOT AVAILABLE)
     Press CTRL+D to quit
 """
+# =========================================================================== main program
 
 # connect to database
 conn = None
@@ -352,6 +390,9 @@ except Exception as e:
 else:
     print("successfully connect to the database")
     cursor = conn.cursor()
+
+getAllPeople();
+getAllCourses();
 
 # continously scan for command
 while (True):
@@ -412,7 +453,7 @@ while (True):
                 else:
                     tmp = input("Modify (1) or delete (2)? -> ")
                     if (int(tmp) == 1):
-                        print("I'm too lazy to write a select menu, please type all the arguments again, type None if don't want to make change at any attribute")
+                        print("Please type all the arguments again, type None if don't want to make change at that attribute")
                         print("Please input in this format: [first name][last name][email][password][nickname][credit][exp]")
                         if (not modify(PERSON, PERSON_ARG, people[index])):
                             break
@@ -423,7 +464,6 @@ while (True):
                         delete(people, people[index])
                         
         elif (command == 9):
-            
             # get all course and print it out first
             cS = ""
             if (len(courses) == 0):
@@ -457,7 +497,7 @@ while (True):
                     tmp = input("Modify (1) or delete (2)? -> ")
                     if (int(tmp) == 1):
                         print(
-                            "I'm too lazy to write a select menu, please type all the arguments again, including the change that you're willing to make")
+                            "Please type all the arguments again, type None if don't want to make change at that attribute")
                         print(
                             "Please input in this format: [code] [name] [handbook] [year] [term]")
                         if (not modify(COURSE, COURSE_ARG, courses[index])):
@@ -468,9 +508,6 @@ while (True):
                     elif (int(tmp) == 2):
                         delete(courses, courses[index])
 
-                    
-
-            
         print("Done!")
 
     print("\n")
