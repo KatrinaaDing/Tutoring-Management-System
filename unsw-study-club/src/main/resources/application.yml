@@ -1,11 +1,14 @@
-
-flyway:
-  baseline-on-migrate: true
 app:
   datasource:
-    jdbc-url: jdbc:postgresql://47.74.70.82:5432/unsw1
+    jdbc-url: jdbc:postgresql://test.cf8ik1zgfzdt.us-east-2.rds.amazonaws.com:5432/test
     username: postgres
-    password: xiaoding
+    password: vykanpostgres
     pool-size: 30
+
 server:
   port: 8080
+
+spring:
+  flyway:
+    #先暂时关闭flyway
+    enabled: false

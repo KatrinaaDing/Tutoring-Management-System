@@ -26,10 +26,11 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /////////////////// Person CRUD //////////////////////////////////////
     @Override
     public int insertPerson(UUID id, Person person) {
         // exp and join_date will be automatically initialized
-        return jdbcTemplate.update("INSERT INTO Person VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        return jdbcTemplate.update("INSERT INTO Person VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 id,
                 person.getFirstName(),
                 person.getLastName(),
@@ -37,7 +38,10 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
                 person.getPassword(),
                 person.getNickName(),
                 person.getProfileImage(),
-                person.getGender()
+                person.getGender(),
+                person.getExp(),
+                person.getCredit()
+                // 时间会在数据库自动加入
         );
     }
 
@@ -56,6 +60,7 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
             String profileImage = resultSet.getString("profile_image");
             String gender = resultSet.getString("gender");
             int exp = resultSet.getInt("exp");
+            double credit = resultSet.getDouble("credit");
             Timestamp joinDate = resultSet.getTimestamp("join_date");
             return new Person(id, firstName, lastName, email, password, nickName, profileImage, gender.charAt(0) , joinDate);
         });
@@ -77,6 +82,7 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
                     String profileImage = resultSet.getString("profile_image");
                     String gender = resultSet.getString("gender");
                     int exp = resultSet.getInt("exp");
+                    double credit = resultSet.getDouble("credit");
                     Timestamp joinDate = resultSet.getTimestamp("join_date");
                     return new Person(id, firstName, lastName, email, password, nickName, profileImage, gender.charAt(0), joinDate);
                 });
@@ -103,6 +109,7 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
                         "profile_image = ?," +
                         "gender = ?," +
                         "exp = ?" +
+                        "credit = ?" +
                         "WHERE id = ?",
                 person.getFirstName(),
                 person.getLastName(),
@@ -112,10 +119,12 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
                 person.getProfileImage(),
                 person.getGender(),
                 person.getExp(),
+                person.getCredit(),
                 id
         );
     }
 
+    /////////////////// Course CRUD //////////////////////////////////////
 
     @Override
     public int insertCourse(UUID id, Course course) {
@@ -194,6 +203,7 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
         );
     }
 
+    /////////////////// Student CRUD //////////////////////////////////////
     @Override
     public int addStudent(UUID personId, UUID courseId) {
         return jdbcTemplate.update(
@@ -247,6 +257,7 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
         );
     }
 
+    /////////////////// Tutor CRUD //////////////////////////////////////
     @Override
     public int addTutor(UUID personId, UUID courseId) {
         return jdbcTemplate.update(
@@ -299,6 +310,7 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
         return Optional.ofNullable(tutor);
     }
 
+    /////////////////// Admin CRUD //////////////////////////////////////
     @Override
     public int addAdmin(UUID id, Admin admin) {
         return jdbcTemplate.update("INSERT INTO Admin VALUES (?, ?, ?)",
@@ -352,6 +364,7 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
         );
     }
 
+    /////////////////// Video CRUD //////////////////////////////////////
     @Override
     public int uploadVideo(UUID id, Video video) {
         return jdbcTemplate.update("INSERT INTO Video VALUES (?, ?, ?, ?, ?, ?)",
@@ -402,6 +415,7 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
         );
     }
 
+    /////////////////// ApplicationUser CRUD //////////////////////////////////////
     @Override
     public Optional<ApplicationUser> selectApplicationUserByUsername(String email) {
         final String sql = "SELECT * FROM Person WHERE email = ?";
@@ -422,6 +436,7 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
         return Optional.ofNullable(appUser);
     }
 
+    /////////////////// Case CRUD //////////////////////////////////////
     @Override
     public int addCase(UUID id, Case c) {
         return jdbcTemplate.update(
@@ -492,6 +507,7 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
     }
 
 
+    /////////////////// Subtitle CRUD //////////////////////////////////////
     @Override
     public int addSubtitle(UUID id, Subtitle subtitle) {
         UUID caseId = jdbcTemplate.queryForObject(
@@ -545,6 +561,7 @@ public class UnswStudyClubDataAccessService implements UnswStudyClubDao {
         );
     }
 
+    /////////////////// Comment CRUD //////////////////////////////////////
     @Override
     public int addComment(UUID id, Comment c) {
         return jdbcTemplate.update("INSERT INTO Comment VALUES (?, ?, ?, ?)",

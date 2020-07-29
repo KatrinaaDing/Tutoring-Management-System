@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "app.datasource.pool-size",
+      "type": "java.lang.String",
+      "description": "Description for app.datasource.pool-size."
+  }
+] }

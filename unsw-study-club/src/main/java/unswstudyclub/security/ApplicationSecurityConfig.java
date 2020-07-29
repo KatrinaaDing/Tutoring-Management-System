@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.authentication.configurers.userdetails.DaoAuthenticationConfigurer;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.User;
@@ -100,6 +101,14 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
         return provider;
     }
 
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        // 解决静态资源被拦截问题
+        web.ignoring().antMatchers("/css/**");
+        web.ignoring().antMatchers("/fonts/**");
+        web.ignoring().antMatchers("/images/**");
+        web.ignoring().antMatchers("/vendor/**");
+    }
 
 
     // this is no need if using DAO

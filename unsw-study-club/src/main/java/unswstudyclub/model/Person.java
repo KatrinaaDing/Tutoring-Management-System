@@ -15,6 +15,8 @@ public class Person {
     private String profileImage;
     private char gender;
     private int exp;
+    // vylian 2020-07-25
+    private double credit;
     private Timestamp joinDate;
 
     public Person(@JsonProperty("id") UUID id,
@@ -35,6 +37,7 @@ public class Person {
         this.profileImage = profileImage;
         this.gender = gender;
         this.exp = 0;
+        this.credit = 0;
         this.joinDate = joinDate;
     }
 
@@ -104,6 +107,14 @@ public class Person {
 
     public void setExp(int exp) {
         this.exp = exp;
+    }
+
+    public double getCredit() {
+        return credit;
+    }
+
+    public void setCredit(double credit) {
+        this.credit = credit;
     }
 
     public Timestamp getJoinDate() {

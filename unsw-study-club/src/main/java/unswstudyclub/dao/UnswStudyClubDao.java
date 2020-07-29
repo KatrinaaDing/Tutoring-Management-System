@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public interface UnswStudyClubDao {
 
-    // Person
+    // Person ///////////////////////////////////
 
     int insertPerson(UUID id, Person person);
 
@@ -19,13 +19,13 @@ public interface UnswStudyClubDao {
         UUID id = UUID.randomUUID();
         return insertPerson(id, person);
     }
-
     List<Person> selectAllPeople();
     Optional<Person> selectPersonById(UUID id);
     int deletePersonById(UUID id);
     int updatePersonById(UUID id, Person person);
 
-    // Course
+
+    // Course /////////////////////////////////
 
     int insertCourse(UUID id, Course course);
 
@@ -40,21 +40,21 @@ public interface UnswStudyClubDao {
     int deleteCourseByCode(String code);
     int updateCourseByCode(String code,Course newCourse);
 
-    // Student
+    // Student //////////////////////////////////////////
 
     int addStudent(UUID personId, UUID courseId);
     int removeStudent(UUID personId, UUID courseId);
     public List<Student> selectAllStudent();
     Optional<Student> selectStudentById(UUID id);
 
-    // Tutor
+    // Tutor ////////////////////////////////////////////
     int addTutor(UUID personId, UUID courseId);
     int removeTutor(UUID personId, UUID courseId);
     public List<Tutor> selectAllTutor();
     Optional<Tutor> selectTutorById(UUID id);
 
 
-    // Admin
+    // Admin //////////////////////////////////////////////
 
     int addAdmin(UUID id, Admin admin);
 
@@ -68,7 +68,7 @@ public interface UnswStudyClubDao {
     Optional<Admin> selectAdminById(UUID id);
     int updateAdminById(UUID id, Admin admin);
 
-    // Video
+    // Video ////////////////////////////////////////////
 
     int uploadVideo(UUID id, Video video);
 
@@ -81,11 +81,11 @@ public interface UnswStudyClubDao {
     int deleteVideoById(UUID id);
     int updateVideoById(UUID id, Video newVideo);
 
-    // auth
+    // auth ///////////////////////////////////////////////
 
     Optional<ApplicationUser> selectApplicationUserByUsername(String username);
 
-    // Case
+    // Case ///////////////////////////////////////////////
 
     int addCase(UUID id, Case c);
 
@@ -98,7 +98,7 @@ public interface UnswStudyClubDao {
     Optional<Case> getCaseById(UUID id);
     Optional<Case> getCaseByTitle(String title);
 
-    // comment
+    // comment /////////////////////////////////////////
 
     int addComment(UUID id, Comment c);
 
@@ -111,7 +111,7 @@ public interface UnswStudyClubDao {
     int updateCommentById(UUID id, Comment c);
     int deleteCommentById(UUID id);
 
-    // subtitle
+    // subtitle ///////////////////////////////////////
 
     int addSubtitle(UUID id, Subtitle subtitle);
 
