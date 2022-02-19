@@ -1,0 +1,11 @@
+
+flyway:
+  baseline-on-migrate: true
+app:
+  datasource:
+    jdbc-url: jdbc:postgresql://47.74.70.82:5432/unsw1
+    username: postgres
+    password: xiaoding
+    pool-size: 30
+server:
+  port: 8080

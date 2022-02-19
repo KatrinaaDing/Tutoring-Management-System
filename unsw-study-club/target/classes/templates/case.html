@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <link th:href="@{/css/custom.css}" rel="stylesheet">
+
+        <title id="case-title" th:text="${title}"></title>
+    </head>
+    <body>
+        <h1 th:text="${title}" style="font-size: 50px; text-align: center;"></h1>
+        <div id="case-container">
+            <div id="loading-icon" style="text-align: center;"><h2>Loading...</h2></div>
+        </div>
+
+        <h2><a href="/courses">Back to menu</a></h2>
+        <script th:src="@{/js/case.js}"></script>
+    </body>
+</html>

@@ -1,0 +1,116 @@
+body {
+    align-items: center;
+    text-align: center;
+}
+
+li {
+    margin: 10px;
+}
+
+#case-container {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    width: 85%;
+    margin: auto;
+}
+
+.activity-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 85%;
+    padding: 10px;
+    margin: auto;
+}
+
+.activity-item {
+    margin: 20px;
+    padding: 20px;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-wrap: wrap;
+    border-radius: 15px;
+    box-shadow: 1px 1px 20px rgba(133,75,109,0.15);
+    transition: all 0.3s ease-in-out;
+}
+
+.activity-item:hover {
+    cursor: pointer;
+    box-shadow: 1px 1px 20px rgba(133, 75, 109, 0.3);
+    transform: scale(1.05);
+}
+
+.activity-item .title {
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.activity-item .subject {
+    color: gray;
+    font-size: 15px;
+    font-weight: 100;
+}
+
+.activity-item .description {
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.date {
+    font-size: 10px;
+    color: gray;
+    margin-top: 10px;   
+}
+
+
+.case-part {
+    display: flex;
+    flex-direction: column;
+}
+
+.case-part-title {
+    font-size: 50px;
+    font-weight: 600;
+}
+
+.case-part .subtitle {
+    color: royalblue;
+}
+
+.subtitle {
+    display: flex;
+    flex-direction: column;
+    width: 85%;
+    margin: auto;
+    padding: 15px;
+}
+
+.subtitle-title {
+    font-weight: 500;
+    font-size: 20px;
+    /* transition: all 0.3s ease-in-out; */
+}
+
+.subtitle-title:hover {
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.comment {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    text-overflow: ellipsis;
+    border: lightgray solid 0.5px;
+    padding: 15px;
+}
+
+.comment .uploader {
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}

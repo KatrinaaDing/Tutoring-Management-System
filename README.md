@@ -1,3 +1,16 @@
-# Chestnut_Website
-新南栗子教育的网站代码仓库，网站主要是由Spring Boot框架构成。
+# Tutoring Managment System
 
+A system designed for tutoring and managing education resources.
+
+Funcionalities includes:
+
+1. Users management (register/login/enrol)
+2. Uploading recordings
+3. Uploading articles
+4. Comment and reply
+
+## Tech Stack
+
+* Frontend: React
+* Backend: Java Spring boot
+* Database: PostgreSQL
