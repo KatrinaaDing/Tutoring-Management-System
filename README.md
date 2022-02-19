@@ -11,6 +11,6 @@ Funcionalities includes:
 
 ## Tech Stack
 
-* Frontend: React
+* Frontend: React (planning)
 * Backend: Java Spring boot
 * Database: PostgreSQL
